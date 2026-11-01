@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maria Eduarda | As Coisas Que Adoro Em Você</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fontes Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Canvas Confetti para a comemoração final -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: '#0a0a0b',
+                        cardBg: '#121215',
+                        cardBorder: '#27272a',
+                        accentGray: '#a1a1aa',
+                        lightGray: '#e4e4e7',
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"Inter"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        :root {
+            color-scheme: dark;
+        }
+
+        body {
+            position: relative;
+            isolation: isolate;
+            background: #080808;
+            color: #e4e4e7;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            background:
+                linear-gradient(180deg, rgba(0, 0, 0, 0.58) 0%, rgba(0, 0, 0, 0.72) 38%, rgba(8, 8, 8, 0.98) 100%),
+                radial-gradient(ellipse at center, rgba(0, 0, 0, 0.18) 0%, rgba(0, 0, 0, 0.72) 100%),
+                var(--portrait-image);
+            background-position: center, center, center 28%;
+            background-size: cover, cover, cover;
+            transform: scale(1.04);
+            animation: backgroundDrift 24s ease-in-out infinite alternate;
+        }
+
+        .font-serif {
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.7s cubic-bezier(0.4, 0.2, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 1rem;
+        }
+
+        .flip-card-back {
+            transform: rotateY(180deg);
+        }
+
+        .card-description {
+            font-family: 'Nunito', sans-serif;
+            font-size: 0.9rem;
+            font-style: normal;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(255, 255, 255, 0.05); }
+            50% { box-shadow: 0 0 25px rgba(255, 255, 255, 0.15); }
+        }
+
+        @keyframes backgroundDrift {
+            from { transform: scale(1.04) translateY(0); }
+            to { transform: scale(1.1) translateY(-1.5%); }
+        }
+
+        @keyframes floatPhoto {
+            0%, 100% { transform: translateY(0) rotate(-1deg); }
+            50% { transform: translateY(-8px) rotate(1deg); }
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(22px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes softPulse {
+            0%, 100% { box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25); }
+            50% { box-shadow: 0 16px 42px rgba(255, 255, 255, 0.08); }
+        }
+
+        .glow-effect {
+            animation: pulseGlow 4s infinite ease-in-out;
+        }
+
+        .glass-panel {
+            background: rgba(18, 18, 21, 0.72);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            animation: softPulse 7s ease-in-out infinite;
+        }
+
+        .hero-photo {
+            animation: floatPhoto 7s ease-in-out infinite, pulseGlow 4s ease-in-out infinite;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(22px);
+            transition: opacity 700ms ease, transform 700ms cubic-bezier(0.2, 0.7, 0.2, 1);
+        }
+
+        .reveal.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .flip-card {
+            transition: transform 300ms ease, filter 300ms ease;
+        }
+
+        .flip-card:hover {
+            transform: translateY(-5px);
+            filter: brightness(1.12);
+        }
+
+        .invite-dialog {
+            animation: fadeUp 450ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+        }
+
+        .letter-content-open {
+            animation: fadeUp 450ms ease both;
+        }
+
+        button {
+            transition: transform 220ms ease, background-color 220ms ease, color 220ms ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0a0b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #27272a;
+            border-radius: 3px;
+        }
+
+        @media (max-width: 480px) {
+            main {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+
+            .flip-card {
+                height: 10.5rem;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                scroll-behavior: auto !important;
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+
+            .reveal {
+                opacity: 1;
+                transform: none;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-12 selection:bg-zinc-700 selection:text-white" style="--portrait-image: url('linda.jpeg')">
+    <audio id="backgroundMusic" loop preload="none">
+        <source src="musica.mp3" type="audio/mpeg">
+    </audio>
+    <button id="musicToggle" type="button" aria-label="Tocar música" aria-pressed="false" class="fixed bottom-5 right-5 z-40 rounded-full border border-white/10 bg-zinc-900/90 px-4 py-3 text-sm text-zinc-100 shadow-xl backdrop-blur-md flex items-center gap-2">
+        <i data-lucide="music-2" class="w-4 h-4" aria-hidden="true"></i>
+        <span id="musicToggleLabel">Tocar música</span>
+    </button>
+    <p id="musicStatus" role="status" aria-live="polite" class="fixed bottom-20 right-5 z-40 hidden max-w-xs rounded-xl border border-zinc-700 bg-zinc-950/95 px-4 py-3 text-xs text-zinc-200 shadow-xl"></p>
+
+    <main class="max-w-3xl mx-auto px-5 pt-12 sm:px-8 sm:pt-16 space-y-16">
+
+        <!-- 1. HERO SECTION & FOTO PRINCIPAL -->
+        <section class="reveal text-center space-y-7 pt-2">
+            <div class="relative inline-block">
+                <div class="hero-photo w-40 h-48 sm:w-52 sm:h-64 mx-auto rounded-[2rem] overflow-hidden border border-white/20 shadow-2xl relative bg-zinc-900/80">
+                    <img id="mainPhoto" src="linda.jpeg" alt="Foto dela" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-white/10 pointer-events-none"></div>
+                </div>
+                <span class="absolute -bottom-3 -right-3 w-10 h-10 rounded-full glass-panel flex items-center justify-center text-rose-100" aria-hidden="true">
+                    <i data-lucide="heart" class="w-4 h-4"></i>
+                </span>
+            </div>
+
+            <!-- Título e Subtítulo -->
+            <div class="space-y-2">
+                <h1 id="heroTitle" class="text-4xl sm:text-5xl font-serif font-bold tracking-wide text-zinc-100">
+                    Maria Eduarda
+                </h1>
+                <p id="heroSubtitle" class="text-base sm:text-lg text-zinc-300 font-light max-w-lg mx-auto italic font-serif leading-relaxed">
+                    "Amo estar te conhecendo."
+                </p>
+            </div>
+
+            <!-- Contador de Tempo/Momentos -->
+            <div class="glass-panel p-4 sm:p-5 rounded-2xl shadow-lg border border-zinc-800/80 flex items-center justify-around text-center max-w-lg mx-auto">
+                <div class="space-y-0.5">
+                    <span id="counterValue" class="text-2xl font-serif font-bold text-zinc-100">10</span>
+                    <p id="counterLabel" class="text-[11px] uppercase tracking-wider text-zinc-400">Dias te conhecendo (23/10) quando voltamos a nos falar, mas ja conversavamos antes rsrs</p>
+                </div>
+                <div class="h-8 w-[1px] bg-zinc-800"></div>
+                <div class="space-y-0.5">
+                    <span class="text-2xl font-serif font-bold text-zinc-100">∞</span>
+                    <p class="text-[11px] uppercase tracking-wider text-zinc-400">Motivos pra sorrir</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. SEÇÃO DE CARDS INTERATIVOS (FLIP CARDS) -->
+        <section class="reveal space-y-5">
+            <div class="text-center space-y-1">
+                <h2 class="text-2xl sm:text-3xl font-serif font-semibold text-zinc-100">As Coisas Que Adoro Em Você</h2>
+                <p class="text-sm text-zinc-400">Toque em cada card para revelar o que eu penso</p>
+            </div>
+
+            <!-- Container dos Cards -->
+            <div id="cardsGrid" class="grid grid-cols-1 min-[520px]:grid-cols-2 gap-4 sm:gap-5">
+                <!-- Os cards serão injetados via JS ou renderizados aqui -->
+            </div>
+        </section>
+
+        <!-- 4. CARTA FINAL & CONVITE -->
+        <section class="reveal glass-panel rounded-2xl p-6 sm:p-8 text-center space-y-5 border border-zinc-800/90 relative overflow-hidden">
+            <div class="w-12 h-12 rounded-full bg-zinc-800/80 border border-zinc-700 flex items-center justify-center mx-auto text-zinc-300">
+                <i data-lucide="mail" class="w-5 h-5"></i>
+            </div>
+
+            <div class="space-y-2">
+                <h2 id="letterTitle" class="text-2xl font-serif font-bold text-zinc-100">Uma Carta Pra Você</h2>
+                <p class="text-xs text-zinc-400">Guardei um último recado especial aqui.</p>
+            </div>
+
+            <!-- Botão para Expandir Carta -->
+            <button id="openLetterBtn" onclick="toggleLetter()" class="w-full py-3 px-4 rounded-xl bg-zinc-100 hover:bg-white text-zinc-950 font-medium text-sm transition shadow-lg flex items-center justify-center gap-2">
+                <span>Ler Mensagem Especial</span>
+                <i data-lucide="chevron-down" class="w-4 h-4" id="letterIcon"></i>
+            </button>
+
+            <!-- Conteúdo da Carta (Escondido por padrão) -->
+            <div id="letterContent" class="hidden text-left space-y-4 pt-4 border-t border-zinc-800 text-zinc-300 text-sm leading-relaxed">
+                <p id="letterTextParagraph" class="card-description text-zinc-200">
+                    Sei que fica timida com mensagenzinha fofa, mas vou tentar ser leve kkkkkk. Eu queria encontrar uma forma diferente de te mostrar o quanto você tem sido especial nesse finalzin de ano. Cada conversa, cada risada e cada pequeno detalhe seu me fazem ter certeza de que ter te conhecido foi uma das melhores coisas do meu ano. 
+                    <br><br>
+                    Obrigado por ser essa pessoa incrível e leve. Espero continuar descobrindo ainda mais detalhes lindos sobre você.
+                </p>
+
+                <!-- Convite Interativo -->
+                <div class="pt-4 border-t border-zinc-800/60 text-center not-italic font-sans space-y-4">
+                    <p id="invitationText" class="font-medium text-zinc-200 text-sm">
+                        E aí... como você se sente??
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-2 justify-center">
+                        <button onclick="acceptInvite('Sim! Com certeza!')" class="py-2.5 px-6 rounded-lg bg-zinc-100 hover:bg-white text-zinc-900 text-xs font-semibold transition shadow-md">
+                            PA! ✨
+                        </button>
+                        <button onclick="acceptInvite('Claro, adorei a ideia!')" class="py-2.5 px-6 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-semibold border border-zinc-700 transition">
+                            POI! 😊
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer discreto -->
+        <footer class="reveal text-center text-[11px] text-zinc-500 pt-2">
+            De Iago para M. Eduarda <3 • <span id="footerYear">2026</span>
+        </footer>
+
+    </main>
+
+    <!-- MODAL DE RESPOSTA DO CONVITE -->
+    <div id="inviteModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="invite-dialog bg-zinc-900 border border-zinc-800 max-w-xs w-full rounded-2xl p-6 text-center space-y-4">
+            <div class="w-12 h-12 rounded-full bg-emerald-950/60 text-emerald-400 border border-emerald-800/50 flex items-center justify-center mx-auto">
+                <i data-lucide="check-circle-2" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-lg font-serif font-bold text-white">Resposta Enviada! ✨</h3>
+            <p id="inviteResponseText" class="text-xs text-zinc-300"></p>
+            <button onclick="closeInviteModal()" class="w-full py-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded-lg text-xs font-medium border border-zinc-700">
+                Fechar
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // ESTADO INICIAL DOS CARDS DE DETALHES
+        let defaultCards = [
+            {
+                id: 1,
+                title: "O seu Riso",
+                icon: "smile",
+                description: "O som da sua risada teve o poder instantâneo de mudar o meu dia pra melhor. É genuíno e contagiante."
+            },
+            {
+                id: 2,
+                title: "Seu Olhar",
+                icon: "eye",
+                description: "A forma sincera como você olha quando está prestando atenção em algo ou contando alguma coisa."
+            },
+            {
+                id: 3,
+                title: "Seu Gosto Musical",
+                icon: "music",
+                description: "Adoro descobrir suas músicas favoritas e perceber como cada playlist combina com a minha kkkk."
+            },
+            {
+                id: 4,
+                title: "Seu Jeito Leve",
+                icon: "sparkles",
+                description: "Você consegue transformar os momentos mais simples em coisas engraçadas kkkkkkkkk."
+            },
+            {
+                id: 5,
+                title: "Pequenos Gestos",
+                icon: "heart",
+                description: "A forma como você se importa com os detalhes e a delicadeza no jeito de tratar as pessoas ao seu redor."
+            },
+            {
+                id: 6,
+                title: "Sua Energia",
+                icon: "sun",
+                description: "Estar perto de você passa uma paz inexplicável. É o tipo de presença que dá vontade de ficar mais tempo. E de fazer o 67 tambem"
+            }
+        ];
+
+        let cardsData = [...defaultCards];
+
+        // INICIALIZAÇÃO DA PÁGINA
+        window.onload = function() {
+            lucide.createIcons();
+            renderCards();
+            document.getElementById('footerYear').innerText = new Date().getFullYear();
+            document.addEventListener('pointerdown', startMusicOnFirstInteraction, { once: true });
+        };
+
+        function startMusicOnFirstInteraction(event) {
+            if (event.target.closest('#musicToggle')) return;
+            playBackgroundMusic();
+        }
+
+        function setMusicPlaying(isPlaying) {
+            const button = document.getElementById('musicToggle');
+            document.getElementById('musicToggleLabel').innerText = isPlaying ? 'Música ligada' : 'Tocar música';
+            button.setAttribute('aria-label', isPlaying ? 'Pausar música' : 'Tocar música');
+            button.setAttribute('aria-pressed', String(isPlaying));
+        }
+
+        async function playBackgroundMusic() {
+            const audio = document.getElementById('backgroundMusic');
+            const status = document.getElementById('musicStatus');
+            try {
+                await audio.play();
+                status.classList.add('hidden');
+            } catch (error) {
+                console.error('Não foi possível iniciar a música.', error);
+                status.innerText = 'Não foi possível iniciar a música. Toque em “Tocar música” para tentar novamente.';
+                status.classList.remove('hidden');
+                setMusicPlaying(false);
+            }
+        }
+
+        document.getElementById('backgroundMusic').addEventListener('playing', () => setMusicPlaying(true));
+        document.getElementById('backgroundMusic').addEventListener('pause', () => setMusicPlaying(false));
+
+        document.getElementById('musicToggle').addEventListener('click', async function() {
+            const audio = document.getElementById('backgroundMusic');
+            if (audio.paused) {
+                await playBackgroundMusic();
+                return;
+            }
+
+            audio.pause();
+        });
+
+        function observeReveals() {
+            const elements = document.querySelectorAll('.reveal');
+            if (!('IntersectionObserver' in window)) {
+                elements.forEach(element => element.classList.add('is-visible'));
+                return;
+            }
+
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.12 });
+
+            elements.forEach(element => observer.observe(element));
+        }
+
+        // RENDERIZAÇÃO DOS CARDS
+        function renderCards() {
+            const grid = document.getElementById('cardsGrid');
+            grid.innerHTML = '';
+
+            cardsData.forEach((card, index) => {
+                const cardEl = document.createElement('div');
+                cardEl.className = 'flip-card reveal h-44 cursor-pointer perspective-1000';
+                cardEl.style.transitionDelay = `${index * 80}ms`;
+                cardEl.tabIndex = 0;
+                cardEl.setAttribute('role', 'button');
+                cardEl.setAttribute('aria-label', `${card.title}. Toque para revelar o detalhe.`);
+                cardEl.setAttribute('aria-pressed', 'false');
+                const toggleCard = () => {
+                    const flipped = cardEl.classList.toggle('flipped');
+                    cardEl.setAttribute('aria-pressed', String(flipped));
+                };
+                cardEl.onclick = toggleCard;
+                cardEl.onkeydown = event => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        toggleCard();
+                    }
+                };
+
+                cardEl.innerHTML = `
+                    <div class="flip-card-inner">
+                        <!-- Frente do Card -->
+                        <div class="flip-card-front glass-panel p-5 flex flex-col justify-between border border-zinc-800/80 hover:border-zinc-700 transition">
+                            <div class="flex items-center justify-between">
+                                <div class="w-8 h-8 rounded-lg bg-zinc-800/60 flex items-center justify-center text-zinc-300">
+                                    <i data-lucide="${card.icon || 'star'}" class="w-4 h-4"></i>
+                                </div>
+                                <span class="text-[10px] text-zinc-500 uppercase tracking-widest font-mono">Toque</span>
+                            </div>
+                            <div>
+                                <h3 class="text-base font-serif font-semibold text-zinc-100">${card.title}</h3>
+                                <p class="text-[11px] text-zinc-400 mt-0.5">Clique para ler o detalhe...</p>
+                            </div>
+                        </div>
+                        <!-- Verso do Card -->
+                        <div class="flip-card-back bg-zinc-900 border border-zinc-700/80 p-5 flex items-center justify-center text-center">
+                            <p class="card-description text-zinc-200">${card.description}</p>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(cardEl);
+            });
+
+            lucide.createIcons();
+            observeReveals();
+        }
+
+        // ABRIR/FECHAR CARTA
+        function toggleLetter() {
+            const content = document.getElementById('letterContent');
+            const icon = document.getElementById('letterIcon');
+            const btn = document.getElementById('openLetterBtn');
+
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                content.classList.add('letter-content-open');
+                icon.style.transform = 'rotate(180deg)';
+                btn.querySelector('span').innerText = 'Ocultar Mensagem';
+            } else {
+                content.classList.add('hidden');
+                content.classList.remove('letter-content-open');
+                icon.style.transform = 'rotate(0deg)';
+                btn.querySelector('span').innerText = 'Ler Mensagem Especial';
+            }
+        }
+
+        // RESPOSTA DO CONVITE
+        function acceptInvite(message) {
+            // Efeito de confete elegante
+            confetti({
+                particleCount: 70,
+                spread: 60,
+                origin: { y: 0.7 },
+                colors: ['#ffffff', '#a1a1aa', '#52525b']
+            });
+
+            document.getElementById('inviteResponseText').innerText = `Você escolheu: "${message}"! PAPOI RSRSRSRS.`;
+            document.getElementById('inviteModal').classList.remove('hidden');
+        }
+
+        function closeInviteModal() {
+            document.getElementById('inviteModal').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
